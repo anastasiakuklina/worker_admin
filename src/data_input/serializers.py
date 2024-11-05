@@ -7,6 +7,7 @@ class CreateEmployeeData(BaseModel):
     position: str
     salary: float = Field(gt=0)
 
+
 class UpdateEmployeeData(BaseModel):
     name: str | None = Field(None, min_length=1)
     age: PositiveInt | None = Field(None, ge=18, le=100)

@@ -6,6 +6,7 @@ from src.core.repository.abstract import IRepository
 
 T = TypeVar('T')
 
+
 class AddCommand(ICommand):
 
     def __init__(self, repository: IRepository, item: T):

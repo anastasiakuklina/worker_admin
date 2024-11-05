@@ -10,6 +10,7 @@ def input_employee_id() -> UUID:
     employee_id = input("Введите id сотрудника: ")
     return UUID(employee_id)
 
+
 EMPLOYEE_FIELDS = {"name": "имя", "age": "возраст", "position": "должность", "salary": "зарплата"}
 
 
@@ -18,7 +19,7 @@ def input_create_employee_data() -> CreateEmployeeData:
     while True:
         try:
             for key, value in EMPLOYEE_FIELDS.items():
-                if not key in data:
+                if key not in data:
                     data[key] = input(f"Введите {value}: ")
             return CreateEmployeeData.model_validate(data)
         except ValidationError as e:

@@ -46,7 +46,6 @@ class SQLiteRepository(IRepository[T], Generic[T]):
         except DatabaseError as e:
             return Err(str(e))
 
-
     def get(self, item_id: UUID) -> T | None:
         with self.connect() as cursor:
             cursor.execute(f"SELECT * FROM {self.table_name} WHERE id=?", (str(item_id), ))

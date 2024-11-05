@@ -26,6 +26,7 @@ def generate_random_employee() -> Employee:
         salary=round(random.uniform(30000, 120000), 2)
     )
 
+
 @pytest.fixture
 def employee_repo(temp_db_file):
     table_name = "employee"
@@ -104,10 +105,9 @@ class TestSQLiteRepository:
         assert employee_found.id == employee.id
         assert employee_found.name == employee.name
 
-
     def test_fail_add_duplicate(self, employee_repo):
         employee = generate_random_employee()
         employee_repo.add(employee)
         res = employee_repo.add(employee)
-        assert is_err(res) == True
+        assert is_err(res)
         assert "unique constraint failed" in res.err_value.lower()
