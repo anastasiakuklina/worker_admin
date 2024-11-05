@@ -44,8 +44,6 @@ def employee_repo(temp_db_file):
         table_name=table_name,
         create_sql=create_table_sql
     )
-    print(repo.get_list())
-    print("end creation")
     return repo
 
 

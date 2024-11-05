@@ -33,9 +33,9 @@ class SQLiteEmployeeRepository(SQLiteRepository[Employee]):
                          table_name="employees",
                          create_sql=create_sql)
 
-    def add(self, data: CreateEmployeeData):
+    def add_new(self, data: CreateEmployeeData):
         employee = Employee(id=uuid.uuid4(), **data.model_dump())
-        return super().add(employee)
+        return self.add(employee)
 
     def find_by_name(self, name: str):
         return super().find(key="name", value=name)

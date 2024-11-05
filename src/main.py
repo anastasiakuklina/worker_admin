@@ -1,10 +1,9 @@
 from result import is_ok, is_err
 
-from src.core import ListCommand, CommandInvoker, AddCommand, FindByNameCommand, UpdateCommand
-from src.core.commands.crud import RemoveCommand
+from src.core import ListCommand, CommandInvoker, FindByNameCommand, UpdateCommand, AddEmployeeCommand, RemoveCommand
 from src.data_input import input_create_employee_data, input_employee_name, input_update_employee_data, \
     input_employee_id
-from src.core.employee import SQLiteEmployeeRepository
+from src.core import SQLiteEmployeeRepository
 from src.view import display_employees
 
 
@@ -25,20 +24,19 @@ def main() -> None:
         match command:
             case 1:
                 data = input_create_employee_data()
-                res = invoker.execute_command(AddCommand(repository, item=data))
+                res = invoker.execute_command(AddEmployeeCommand(repository, data=data))
                 print(res.err_value) if is_err(res) else None
             case 2:
                 employee_id = input_employee_id()
                 invoker.execute_command(RemoveCommand(repository, employee_id))
             case 3:
                 employee_id = input_employee_id()
-                data = input_update_employee_data()
-                if is_ok(data):
-                    params = data.ok_value.model_dump(exclude_none=True)
+                res2 = input_update_employee_data()
+                if is_ok(res2):
+                    params = res2.ok_value.model_dump(exclude_none=True)
                     invoker.execute_command(UpdateCommand(repository, employee_id, **params))
             case 4:
                 employees = invoker.execute_command(ListCommand(repository))
-                print(employees)
                 display_employees(employees)
             case 5:
                 name = input_employee_name()
@@ -51,5 +49,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # main_db()
     main()

@@ -4,11 +4,12 @@ from contextlib import contextmanager
 from sqlite3 import Cursor, DatabaseError
 from typing import TypeVar, Generic, Iterator, Type
 
+from pydantic import BaseModel
 from result import Result, Err, Ok
 
 from src.core.repository.abstract import IRepository
 
-T = TypeVar('T')
+T = TypeVar('T', bound=BaseModel)
 
 
 class SQLiteRepository(IRepository[T], Generic[T]):

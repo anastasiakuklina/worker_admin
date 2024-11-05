@@ -10,20 +10,22 @@ def input_employee_id() -> UUID:
     employee_id = input("Введите id сотрудника: ")
     return UUID(employee_id)
 
+EMPLOYEE_FIELDS = {"name": "имя", "age": "возраст", "position": "должность", "salary": "зарплата"}
+
 
 def input_create_employee_data() -> CreateEmployeeData:
     data = {}
     while True:
         try:
-            data["name"] = input("Введите имя: ") if data.get("name") is None else data.get("name")
-            data["age"] = int(input("Введите возраст: ")) if data.get("age") is None else data.get("age")
-            data["position"] = input("Введите должность: ") if data.get("position") is None else data.get("position")
-            data["salary"] = float(input("Введите зарплату: ")) if data.get("salary") is None else data.get("salary")
+            for key, value in EMPLOYEE_FIELDS.items():
+                if not key in data:
+                    data[key] = input(f"Введите {value}: ")
             return CreateEmployeeData.model_validate(data)
         except ValidationError as e:
             for err in e.errors():
-                print(f"{err['loc'][0]}: {err['msg']}")
-                data[err['loc'][0]] = None
+                key = str(err['loc'][0])
+                print(f"{key}: {err['msg']}")
+                data.pop(key)
 
 
 def input_employee_name():
@@ -32,19 +34,19 @@ def input_employee_name():
 
 def input_update_employee_data() -> Result[UpdateEmployeeData, str]:
     data = {}
-    keys = ["name", "age", "position", "salary"]
-    ru_names = {"name": "имя", "age": "возраст", "position": "должность", "salary": "зарплата"}
+    keys = list(EMPLOYEE_FIELDS.keys())
     while True:
         try:
             for key in keys:
-                val = input(f"Введите {ru_names[key]}, если хотите обновить: ")
-                if val:
-                    data[key] = val
-            if not any(data.values()):
+                value = input(f"Введите {EMPLOYEE_FIELDS[key]}, если хотите обновить: ")
+                if value:
+                    data[key] = value
+            if not data:
                 return Err("Нечего обновлять")
             return Ok(UpdateEmployeeData.model_validate(data))
         except ValidationError as e:
             keys = []
             for err in e.errors():
-                print(f"{err['loc'][0]}: {err['msg']}")
-                keys.append(err['loc'][0])
+                key = str(err['loc'][0])
+                print(f"{key}: {err['msg']}")
+                keys.append(key)
