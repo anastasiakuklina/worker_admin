@@ -33,8 +33,6 @@ class SQLiteRepository(IRepository[T], Generic[T]):
     def add(self, item: T) -> Result[None, str]:
         try:
             with self.connect() as cursor:
-                query = """SELECT name FROM sqlite_master WHERE type='table';"""
-                cursor.execute(query)
                 columns_list = item.model_dump().keys()
                 columns = ", ".join(columns_list)
                 values_list = item.model_dump().values()
